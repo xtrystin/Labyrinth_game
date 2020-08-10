@@ -3,69 +3,118 @@
 
 using namespace std;
 
-/*
-class Tplayer               //todo
+
+class Tplayer;
+class Tfruit;
+class Tlevel;
+
+                        //todo namespace: Tplayer, Tfruit
+class Tplayer               
 {
+public:         // todo private
+    int x;           
+    int y;
+    
+
 
 };
-*/
 
 
 
-///////////////////// CLASS Tdisplay ////////////////////////////////////////////////////////////////
-class Tdisplay
+class Tfruit
+{
+public:             //todo private
+    int x;
+    int y;
+
+
+
+   // Tfruit(int id);   // constructor
+
+};
+
+
+
+
+///////////////////// CLASS Tlevel - displaying level map ///////////////////////////////////////////////////////////////////////
+class Tlevel
 {
 private:
     static const int Kwidth;
     static const int Kheight;
-    int index;
+               
 
-   
+    Tfruit Fruit;
+    Tplayer Player;
+
+
+    void lvlFirst(int, int);
+    void lvlSec(int, int);
+    void StartPosition(Tplayer&, Tfruit&, int);
 
 
 public:
-
-   // Tplayer Player;
-                  
-    int playerX = 1;            // class Tplayer
-    int playerY = 0;            
-
-    int FruitX = 6;               // todo: class Fruit
-    int FruitY = 13;
-
-    void lvlFirst(int, int);
-
-    void display();
-    Tdisplay(char k)    // constructor
-    {
-        index = k;
-    }
-
+             
+    void display(int);
+                                                                                   
+                                                                                                                                                                                                                              
+                                                                                            
+    //Tlevel() {};
 };
 
-//  STATIC  //
-const int Tdisplay::Kheight = 20;
-const int Tdisplay::Kwidth = 50;
+//  STATIC   WINDOW SIZE: 50 x 20  //
+const int Tlevel::Kheight = 20;
+const int Tlevel::Kwidth = 50;
 //  end STATIC  //
 
-///////////////FUNC class Tdisplay ////////////////////
 
+///////////////FUNC class Tlevel /////////////////////////
+
+
+
+//////////////MAPS//////////////
 // MAP lvl 1
-void Tdisplay::lvlFirst(int x, int y)
+void Tlevel::lvlFirst(int x, int y)
 {
-    if (x == 2 || ( x == playerX && y == playerY ) || ( y == 19 && x != 1 ) || x == Kwidth-2 || ( y == 3 && x != 1 && x != 3 && x != 4 ) || ( x == 5 && y > 3 && y < 14 ) )
+    if (x == Player.x && y == Player.y)
+    {
+        cout << 'p';
+    }
+    else if (x == 2 || ( y == 19 && x != 1 ) || x == Kwidth-2 || ( y == 3 && x != 1 && x != 3 && x != 4 ) || ( x == 5 && y > 3 && y < 14 ) )
         cout << " ";
-    else if (x == FruitX && y == FruitY)
+    else if (x == Fruit.x && y == Fruit.y)
     {
         cout << '+';
     }
+    
+    else
+        cout << "&";
+
+// MAP lvl 2
+}void Tlevel::lvlSec(int x, int y)
+{
+    if (x == Player.x && y == Player.y)
+    {
+        cout << 'p';
+    }
+    else if (y == 19 || ( y == 16 && x > 25 ) || ( x == 26 && y < 17 && y > 11 ) || ( x == Kwidth-2 ) || ( y == 3 && x != 1 ) || ( x == 5 && y > 3 && y < 14 ) )
+        cout << " ";
+    else if (x == Fruit.x && y == Fruit.y)
+    {
+        cout << '+';
+    }
+    
     else
         cout << "&";
 }
+///////////END MAPS////////////////
 
 
-// DISPLAY MAP
-void Tdisplay::display()
+
+
+
+////////// DISPLAY MAP //////////////
+void Tlevel::display(int index)
 {
     for (int i = 0; i < Kwidth; i++)
         cout << "*";                
@@ -83,16 +132,18 @@ void Tdisplay::display()
                 switch (index)
                 {
                     case 1:
+                        StartPosition(Player, Fruit, 1);     // Fruit and Player start position
                         lvlFirst(x, y);
                         break;
                     case 2:
-                        cout << " ";
+                        StartPosition(Player, Fruit, 2);
+                        lvlSec(x, y);
                         break;
                     default:
-                        cout << "ERROR: Tdisplay > display() > switch ";
+                        cout << "ERROR: Tlevel > display() > switch ";
                         getchar();
                         getchar();
-                        exit(0);
+                        exit(3);
                 }
                 //cout << " ";
             }
@@ -103,11 +154,42 @@ void Tdisplay::display()
     for (int i = 0; i < Kwidth; i++)
         cout << "*";
 }
-///////////////END FUNC class Tdisplay ////////////////////
-
-///////////////////// END CLASS Tdisplay ////////////////////////////////////////////////////////////////
+/////////END func display map//////////
 
 
+// Fruit & Player start position///////
+void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)
+{
+    switch (id)
+    {
+    case 1:
+        p.x = 1;
+        p.y = 0;
+
+        f.x = 6;
+        f.y = 13;
+        break;
+    case 2:
+        p.x = 1;
+        p.y = 19;
+
+        f.x = 25;
+        f.y = 12;
+        break;
+    default:
+        cout << "ERROR class Tfruit > constructor > switch";
+
+        getchar(); getchar();
+        exit(3);
+
+    }
+}
+/////END StartPosition//////////////
+
+
+///////////////END FUNCs class Tlevel //////////////////////
+
+///////////////////// END CLASS Tlevel ////////////////////////////////////////////////////////////////
 
 
 
@@ -116,11 +198,11 @@ void Tdisplay::display()
 
 int main()
 {
-    Tdisplay lvl(1);
+    Tlevel lvl;
 
     while (1)
     {
-        lvl.display();
+        lvl.display(2);
         Sleep(1000);
         system("cls");
        
