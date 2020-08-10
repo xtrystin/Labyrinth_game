@@ -52,6 +52,7 @@ private:
     void lvlFirst(int, int);
     void lvlSec(int, int);
     void StartPosition(Tplayer&, Tfruit&, int);
+    void victory(int);
 
 
 public:
@@ -73,19 +74,34 @@ const int Tlevel::Kwidth = 50;
 
 ///////////////FUNC class Tlevel /////////////////////////
 
-
+void Tlevel::victory(int level)
+{
+    system("cls");
+    cout << "You passed level: " << level;
+    Sleep(5000);
+}
 
 //////////////MAPS//////////////
 // MAP lvl 1
 void Tlevel::lvlFirst(int x, int y)
 {
-                                                                                                         // todo logic
-
+    // todo logic                       
+    //if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) ||  )
+    //{
+      //  Player.x = 1;
+        //Player.y = 0;
+   // }
+   
+    
+    
+    
+    
+    ////////PRINTING//////////
     if (x == Player.x && y == Player.y)
     {
         cout << 'p';
     }
-    else if (x == 2 || ( y == 19 && x != 1 ) || x == Kwidth-2 || ( y == 3 && x != 1 && x != 3 && x != 4 ) || ( x == 5 && y > 3 && y < 14 ) )
+    else if ( ( x == 1 && y == 0 ) || x == 2 || ( y == 19 && x != 1 ) || x == Kwidth-2 || ( y == 3 && x != 1 && x != 3 && x != 4 ) || ( x == 5 && y > 3 && y < 14 ) )
         cout << " ";
     else if (x == Fruit.x && y == Fruit.y)
     {
@@ -98,7 +114,26 @@ void Tlevel::lvlFirst(int x, int y)
 // MAP lvl 2
 }void Tlevel::lvlSec(int x, int y)
 {
-                                                                                                        // todo logic
+                                                                                                  
+
+    // LOGIC                     
+    if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) || ( Player.x != Fruit.x || Player.y != Fruit.y) && Player.y != 19 && Player.x != 48 
+        && (Player.y != 3 || Player.x < 2 ) && ( Player.x != 5 || Player.y < 3 || Player.y > 13 ) 
+        && ( Player.y != 16  || Player.x < 26) && ( Player.x != 26 || Player.y > 16 || Player.y < 12 ) )
+    {
+        Player.x = 1;
+        Player.y = 19;
+    }
+
+
+    // TODO IF FRUIT HOVER
+    if (Player.x == Fruit.x && Player.y == Fruit.y)
+    {
+        victory(2);
+
+    }
+
+
 
     if (x == Player.x && y == Player.y)
     {
@@ -113,6 +148,7 @@ void Tlevel::lvlFirst(int x, int y)
     
     else
         cout << "&";
+
 }
 ///////////END MAPS////////////////
 
@@ -157,6 +193,7 @@ void Tlevel::display(int index, bool first)
                         exit(3);
                 }
                 //cout << " ";
+                
             }
         }
         cout << endl;
@@ -181,8 +218,8 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)       //execute only o
         f.y = 13;
         break;
     case 2:
-        p.x = 1;
-        p.y = 19;
+        p.x = 26;            // 1 19
+        p.y = 16;
 
         f.x = 25;
         f.y = 12;
@@ -310,15 +347,16 @@ int main()
             system("cls");
             Movement.Listener();
             lvl.display(2, false);
-            Sleep(100);
+            Sleep(10);
+            cout << endl;
+            cout << "x: " << lvl.Player.x <<endl;
+            cout << "y: "<< lvl.Player.y;
 
 
         }
     }
-    
 
 
-    //do keyboard input
 
 
 
