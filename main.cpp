@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <conio.h>
 
 using namespace std;
 
@@ -12,8 +13,8 @@ class Tlevel;
 class Tplayer               
 {
 public:         // todo private
-    int x;           
-    int y;
+    unsigned int x;           
+    unsigned int y;
     
 
 
@@ -24,8 +25,8 @@ public:         // todo private
 class Tfruit
 {
 public:             //todo private
-    int x;
-    int y;
+    unsigned int x;
+    unsigned int y;
 
 
 
@@ -45,7 +46,7 @@ private:
                
 
     Tfruit Fruit;
-    Tplayer Player;
+    
 
 
     void lvlFirst(int, int);
@@ -54,8 +55,10 @@ private:
 
 
 public:
-             
-    void display(int);
+
+    Tplayer Player;
+
+    void display(int, bool);
                                                                                    
                                                                                                                                                                                                                               
                                                                                             
@@ -76,6 +79,8 @@ const int Tlevel::Kwidth = 50;
 // MAP lvl 1
 void Tlevel::lvlFirst(int x, int y)
 {
+                                                                                                         // todo logic
+
     if (x == Player.x && y == Player.y)
     {
         cout << 'p';
@@ -93,6 +98,8 @@ void Tlevel::lvlFirst(int x, int y)
 // MAP lvl 2
 }void Tlevel::lvlSec(int x, int y)
 {
+                                                                                                        // todo logic
+
     if (x == Player.x && y == Player.y)
     {
         cout << 'p';
@@ -114,7 +121,7 @@ void Tlevel::lvlFirst(int x, int y)
 
 
 ////////// DISPLAY MAP //////////////
-void Tlevel::display(int index)
+void Tlevel::display(int index, bool first)
 {
     for (int i = 0; i < Kwidth; i++)
         cout << "*";                
@@ -132,11 +139,15 @@ void Tlevel::display(int index)
                 switch (index)
                 {
                     case 1:
-                        StartPosition(Player, Fruit, 1);     // Fruit and Player start position
+                        if (first == true)
+                            StartPosition(Player, Fruit, 1);     // Fruit and Player start position
+
                         lvlFirst(x, y);
                         break;
                     case 2:
-                        StartPosition(Player, Fruit, 2);
+                        if (first == true)
+                            StartPosition(Player, Fruit, 2);
+
                         lvlSec(x, y);
                         break;
                     default:
@@ -158,7 +169,7 @@ void Tlevel::display(int index)
 
 
 // Fruit & Player start position///////
-void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)
+void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)       //execute only once
 {
     switch (id)
     {
@@ -192,6 +203,96 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)
 ///////////////////// END CLASS Tlevel ////////////////////////////////////////////////////////////////
 
 
+class Tmovement
+{
+private:
+
+    void moveRIGHT();
+    void moveLEFT();
+    void moveUP();
+    void moveDOWN();
+
+    
+                                               //     void (*mov[4]) ();                                                    //todo
+                                               //     mov = { moveRIGHT, moveLEFT, moveUP, moveDOWN };
+
+    Tlevel *  plvl;
+
+public:
+      void Listener();
+
+      Tmovement(Tlevel* p)     //constructor
+      {
+          plvl = p;
+      }
+
+};
+
+void Tmovement::Listener()               // todo check toupper  check if tab is clicked                                 //GetAsyncKeyState(VK_UP)
+{
+    /*
+                                                                        switch (_getch())
+                                                                        {
+                                                                        case 'd':
+                                                                            (*mov[0]) ();
+                                                                            break;
+                                                                        case 'a':
+                                                                            (*mov[1]) ();
+                                                                            break;
+                                                                        case 'w':
+                                                                            (*mov[2]) ();
+                                                                            break;
+                                                                        case 's':
+                                                                            (*mov[3]) ();
+                                                                            break;
+                                                                        default:
+                                                                            break;
+                                                                        }
+          
+                                                                        */
+
+    switch (_getch())
+    {
+    case 'd':
+        moveRIGHT();
+        break;
+    case 'a':
+        moveLEFT();
+        break;
+    case 'w':
+        moveUP();
+        break;
+    case 's':
+        moveDOWN();
+        break;
+    default:
+        break;
+    }
+
+   
+}
+
+void Tmovement::moveRIGHT()
+{
+    plvl->Player.x++;
+   // cout << plvl->Player.x;
+}
+void Tmovement::moveLEFT()
+{
+    plvl->Player.x--;
+    //cout << plvl->Player.y;
+}
+void Tmovement::moveUP()
+{
+    plvl->Player.y--;
+   // cout << plvl->Player.y;
+}
+void Tmovement::moveDOWN()
+{
+    plvl->Player.y++;
+  //  cout << plvl->Player.y;
+}
+
 
 
 
@@ -199,14 +300,22 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)
 int main()
 {
     Tlevel lvl;
-
+    Tmovement Movement(&lvl);
+    lvl.display(2, true);                // true - begin (first display)         false - continue (next displays)
+    
     while (1)
     {
-        lvl.display(2);
-        Sleep(1000);
-        system("cls");
-       
+        while (_kbhit())
+        {
+            system("cls");
+            Movement.Listener();
+            lvl.display(2, false);
+            Sleep(100);
+
+
+        }
     }
+    
 
 
     //do keyboard input
