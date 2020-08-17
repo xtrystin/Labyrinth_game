@@ -24,9 +24,10 @@ public:         // todo private
 
 class Tfruit
 {
-public:             //todo private
+private:             
     unsigned int x;
     unsigned int y;
+    friend class Tlevel;
 
 
 
@@ -46,8 +47,7 @@ private:
                
 
     Tfruit Fruit;
-    
-
+   
 
     void lvlFirst(int, int);
     void lvlSec(int, int);
@@ -57,9 +57,9 @@ private:
 
 public:
 
-    Tplayer Player;
+    Tplayer Player;     //public because main()  cout << Player.x
 
-    void display(int, bool);
+    void display(int, bool);    //display the map
                                                                                    
                                                                                                                                                                                                                               
                                                                                             
@@ -78,24 +78,48 @@ void Tlevel::victory(int level)
 {
     system("cls");
     cout << "You passed level: " << level;
-    Sleep(5000);
+    Sleep(1000);
+    system("cls");
+    //program keep calling victory() because if condition is true
+    for (int i = 0; i < Kwidth; i++)
+        cout << "*";
+    cout << endl;
 }
 
 //////////////MAPS//////////////
 // MAP lvl 1
 void Tlevel::lvlFirst(int x, int y)
 {
-    // todo logic                       
-    //if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) ||  )
-    //{
-      //  Player.x = 1;
-        //Player.y = 0;
-   // }
-   
     
+  
     
+
+
+
+
     
+    // IF FRUIT EATEN
+    if (Player.x == Fruit.x && Player.y == Fruit.y)
+    {
+        victory(1);
+        Player.x = 1;
+        Player.y = 0;
+        cout << "*";
+    }
+
+
     
+    // Logic                       
+    if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) ||   ((Player.x != Fruit.x || Player.y != Fruit.y)) &&  Player.x != 2  
+        && ( Player.y != 19 || Player.x == 1 ) && Player.x != 48 && ( Player.y != 3 || Player.x <= 5 ) && ( Player.x != 5 || Player.y > 13 ) )
+    {
+        Player.x = 1;
+        Player.y = 0;
+    }
+
+    
+
+
     ////////PRINTING//////////
     if (x == Player.x && y == Player.y)
     {
@@ -114,10 +138,21 @@ void Tlevel::lvlFirst(int x, int y)
 // MAP lvl 2
 }void Tlevel::lvlSec(int x, int y)
 {
-                                                                                                  
+              
 
-    // LOGIC                     
-    if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) || ( Player.x != Fruit.x || Player.y != Fruit.y) && Player.y != 19 && Player.x != 48 
+
+    // TODO IF FRUIT HOVER  //did?
+    if (Player.x == Fruit.x && Player.y == Fruit.y)
+    {
+        victory(2);
+        Player.x = 1;
+        Player.y = 19;
+        cout << "*";
+    }
+
+
+    // LOGIC                    
+    if ( ( Player.x <= 0 || Player.x > 48 || Player.y < 0 || Player.y > 19 ) ||   ( Player.x != Fruit.x || Player.y != Fruit.y) && Player.y != 19 && Player.x != 48 
         && (Player.y != 3 || Player.x < 2 ) && ( Player.x != 5 || Player.y < 3 || Player.y > 13 ) 
         && ( Player.y != 16  || Player.x < 26) && ( Player.x != 26 || Player.y > 16 || Player.y < 12 ) )
     {
@@ -126,12 +161,7 @@ void Tlevel::lvlFirst(int x, int y)
     }
 
 
-    // TODO IF FRUIT HOVER
-    if (Player.x == Fruit.x && Player.y == Fruit.y)
-    {
-        victory(2);
-
-    }
+   
 
 
 
@@ -211,21 +241,21 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)       //execute only o
     switch (id)
     {
     case 1:
-        p.x = 1;
+        p.x = 1;            // 1 0
         p.y = 0;
 
         f.x = 6;
         f.y = 13;
         break;
     case 2:
-        p.x = 26;            // 1 19
-        p.y = 16;
+        p.x = 1;            // 1 19
+        p.y = 19;
 
         f.x = 25;
         f.y = 12;
         break;
     default:
-        cout << "ERROR class Tfruit > constructor > switch";
+        cerr << "ERROR class Tfruit > constructor > switch";
 
         getchar(); getchar();
         exit(3);
@@ -240,6 +270,9 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)       //execute only o
 ///////////////////// END CLASS Tlevel ////////////////////////////////////////////////////////////////
 
 
+
+///////////////////// CLASS Tmovement ////////////////////////////////////////////////////////////////
+
 class Tmovement
 {
 private:
@@ -248,7 +281,10 @@ private:
     void moveLEFT();
     void moveUP();
     void moveDOWN();
+    void leave();
+    void pause();
 
+    
     
                                                //     void (*mov[4]) ();                                                    //todo
                                                //     mov = { moveRIGHT, moveLEFT, moveUP, moveDOWN };
@@ -302,6 +338,11 @@ void Tmovement::Listener()               // todo check toupper  check if tab is 
     case 's':
         moveDOWN();
         break;
+    case '9':
+        pause();
+        break;
+    case '0':
+        leave();
     default:
         break;
     }
@@ -329,6 +370,22 @@ void Tmovement::moveDOWN()
     plvl->Player.y++;
   //  cout << plvl->Player.y;
 }
+void Tmovement::leave()
+{
+    system("cls");
+    cout << "Leaving the game...";
+    Sleep(2000);
+    exit(0);
+}
+void Tmovement::pause()
+{
+    system("cls");
+    cout << "PAUSED" << endl <<endl;
+    cout << "Click enter to resume" <<endl;
+    getchar();
+
+    system("cls");
+}
 
 
 
@@ -339,7 +396,9 @@ int main()
     Tlevel lvl;
     Tmovement Movement(&lvl);
     lvl.display(2, true);                // true - begin (first display)         false - continue (next displays)
-    
+    cout << endl;
+    cout << "Click 9 to pause" << endl;
+    cout << "Click 0 to exit" << endl;
     while (1)
     {
         while (_kbhit())
@@ -349,8 +408,14 @@ int main()
             lvl.display(2, false);
             Sleep(10);
             cout << endl;
+            cout << "Click 9 to pause" << endl;
+            cout << "Click 0 to exit" <<endl;
+            // debugging:
             cout << "x: " << lvl.Player.x <<endl;
-            cout << "y: "<< lvl.Player.y;
+            cout << "y: " << lvl.Player.y << endl;
+            //
+            
+            
 
 
         }
