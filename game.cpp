@@ -81,6 +81,7 @@ void Tlevel::victory(int level)
     Sleep(1000);
     system("cls");
     //program keep calling victory() because if condition is true
+    cout << "Level " << level << endl;
     for (int i = 0; i < Kwidth; i++)
         cout << "*";
     cout << endl;
@@ -189,6 +190,8 @@ void Tlevel::lvlFirst(int x, int y)
 ////////// DISPLAY MAP //////////////
 void Tlevel::display(int index, bool first)
 {
+    cout << "Level " << index << endl;
+
     for (int i = 0; i < Kwidth; i++)
         cout << "*";                
 
@@ -382,7 +385,7 @@ void Tmovement::pause()
     system("cls");
     cout << "PAUSED" << endl <<endl;
     cout << "Click enter to resume" <<endl;
-    getchar();
+    getchar();                                          //todo   getchar() doesnt work for first time,  lately works
 
     system("cls");
 }
@@ -391,11 +394,41 @@ void Tmovement::pause()
 
 
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc == 2)
+    {
+        string a = argv[1];
+        if (a == "-v")
+        {
+            cout << "Version: " << __DATE__ << " | " << __TIME__;
+            return 0;
+        }
+            
+    }
+
+
+    int choice;
+    cout << "MENU" << endl;
+    cout << "1. First level" << endl;
+    cout << "2. Second level" << endl;
+    cout << "Choose level (1, 2): ";
+    cin >> choice;
+    if (choice != 1 && choice != 2)
+    {
+        cerr << "ERROR main > choice";
+        exit(3);
+    }
+    system("cls");
+    cout << "Loading...";
+    Sleep(1000);
+    system("cls");
+        
+
+
     Tlevel lvl;
     Tmovement Movement(&lvl);
-    lvl.display(2, true);                // true - begin (first display)         false - continue (next displays)
+    lvl.display(choice, true);                // true - begin (first display)         false - continue (next displays)
     cout << endl;
     cout << "Click 9 to pause" << endl;
     cout << "Click 0 to exit" << endl;
@@ -403,9 +436,11 @@ int main()
     {
         while (_kbhit())
         {
+            
             system("cls");
+            
             Movement.Listener();
-            lvl.display(2, false);
+            lvl.display(choice, false);
             Sleep(10);
             cout << endl;
             cout << "Click 9 to pause" << endl;
