@@ -2,69 +2,18 @@
 #include <Windows.h>
 #include <conio.h>
 
+#include "Game.h"
+#include "Menu.h"   //GameLogo()
 using namespace std;
 
 
-class Tplayer;
-class Tfruit;
-class Tlevel;
-
-                        //todo namespace: Tplayer, Tfruit
-class Tplayer               
-{
-public:         // todo private
-    unsigned int x;           
-    unsigned int y;
-    
-
-
-};
-
-
-
-class Tfruit
-{
-private:             
-    unsigned int x;
-    unsigned int y;
-    friend class Tlevel;
-
-
-
-   // Tfruit(int id);   // constructor
-
-};
+bool gotoMenu = false;
 
 
 
 
 ///////////////////// CLASS Tlevel - displaying level map ///////////////////////////////////////////////////////////////////////
-class Tlevel
-{
-private:
-    static const int Kwidth;
-    static const int Kheight;
-               
 
-    Tfruit Fruit;
-   
-
-    void lvlFirst(int, int);
-    void lvlSec(int, int);
-    void StartPosition(Tplayer&, Tfruit&, int);
-    void victory(int);
-
-
-public:
-
-    Tplayer Player;     //public because main()  cout << Player.x
-
-    void display(int, bool);    //display the map
-                                                                                   
-                                                                                                                                                                                                                              
-                                                                                            
-    //Tlevel() {};
-};
 
 //  STATIC   WINDOW SIZE: 50 x 20  //
 const int Tlevel::Kheight = 20;
@@ -80,8 +29,9 @@ void Tlevel::victory(int level)
     cout << "You passed level: " << level;
     Sleep(1000);
     system("cls");
-    //program keep calling victory() because if condition is true
-    cout << "Level " << level << endl;
+
+
+    cout << "Level " << level << endl;          // essential
     for (int i = 0; i < Kwidth; i++)
         cout << "*";
     cout << endl;
@@ -103,6 +53,11 @@ void Tlevel::lvlFirst(int x, int y)
     if (Player.x == Fruit.x && Player.y == Fruit.y)
     {
         victory(1);
+
+       // gotoMenu = 1;
+       // return;
+
+
         Player.x = 1;
         Player.y = 0;
         cout << "*";
@@ -146,6 +101,11 @@ void Tlevel::lvlFirst(int x, int y)
     if (Player.x == Fruit.x && Player.y == Fruit.y)
     {
         victory(2);
+
+        //gotoMenu = 1;
+       // return;
+
+
         Player.x = 1;
         Player.y = 19;
         cout << "*";
@@ -276,33 +236,6 @@ void Tlevel::StartPosition(Tplayer& p, Tfruit& f, int id)       //execute only o
 
 ///////////////////// CLASS Tmovement ////////////////////////////////////////////////////////////////
 
-class Tmovement
-{
-private:
-
-    void moveRIGHT();
-    void moveLEFT();
-    void moveUP();
-    void moveDOWN();
-    void leave();
-    void pause();
-
-    
-    
-                                               //     void (*mov[4]) ();                                                    //todo
-                                               //     mov = { moveRIGHT, moveLEFT, moveUP, moveDOWN };
-
-    Tlevel *  plvl;
-
-public:
-      void Listener();
-
-      Tmovement(Tlevel* p)     //constructor
-      {
-          plvl = p;
-      }
-
-};
 
 void Tmovement::Listener()               // todo check toupper  check if tab is clicked                                 //GetAsyncKeyState(VK_UP)
 {
@@ -327,13 +260,13 @@ void Tmovement::Listener()               // todo check toupper  check if tab is 
           
                                                                         */
 
-    switch (_getch())
+    switch (_getch())       //todo array pointer
     {
     case 'd':
         moveRIGHT();
         break;
     case 'a':
-        moveLEFT();
+        moveLEFT();                 
         break;
     case 'w':
         moveUP();
@@ -341,8 +274,11 @@ void Tmovement::Listener()               // todo check toupper  check if tab is 
     case 's':
         moveDOWN();
         break;
-    case '9':
+    case '8':
         pause();
+        break;
+    case '9':
+        retMenu();
         break;
     case '0':
         leave();
@@ -376,26 +312,35 @@ void Tmovement::moveDOWN()
 void Tmovement::leave()
 {
     system("cls");
+    GameLogo();
     cout << "Leaving the game...";
-    Sleep(2000);
+    Sleep(1000);
     exit(0);
 }
 void Tmovement::pause()
 {
     system("cls");
-    cout << "PAUSED" << endl <<endl;
-    cout << "Click enter to resume" <<endl;
-    getchar();                                          //todo   getchar() doesnt work for first time,  lately works
+    GameLogo();
+    cout << "PAUSED" << endl;
+    system("pause");                                          //todo   getchar() doesnt work for first time,  lately works
 
     system("cls");
+}
+void Tmovement::retMenu()
+{
+    GameLogo();
+    cout << "Returning to menu...";
+    Sleep(1000);
+    gotoMenu = 1;       //global
 }
 
 
 
 
 
-int main(int argc, char** argv)
+void Play(int choice)
 {
+    /*
     if (argc == 2)
     {
         string a = argv[1];
@@ -419,7 +364,10 @@ int main(int argc, char** argv)
         cerr << "ERROR main > choice";
         exit(3);
     }
+    */
+
     system("cls");
+    GameLogo();
     cout << "Loading...";
     Sleep(1000);
     system("cls");
@@ -430,8 +378,12 @@ int main(int argc, char** argv)
     Tmovement Movement(&lvl);
     lvl.display(choice, true);                // true - begin (first display)         false - continue (next displays)
     cout << endl;
-    cout << "Click 9 to pause" << endl;
+    cout << "Movement keys: WASD" << endl;
+    cout << "Click 8 to pause" << endl;
+    cout << "Click 9 to return to menu" << endl;
     cout << "Click 0 to exit" << endl;
+
+    
     while (1)
     {
         while (_kbhit())
@@ -440,10 +392,16 @@ int main(int argc, char** argv)
             system("cls");
             
             Movement.Listener();
+
+            if (gotoMenu == true)       //global
+                return;
+
             lvl.display(choice, false);
             Sleep(10);
             cout << endl;
-            cout << "Click 9 to pause" << endl;
+            cout << "Movement keys: WASD" << endl;
+            cout << "Click 8 to pause" << endl;
+            cout << "Click 9 to return to menu" << endl;
             cout << "Click 0 to exit" <<endl;
             // debugging:
             cout << "x: " << lvl.Player.x <<endl;
@@ -461,6 +419,6 @@ int main(int argc, char** argv)
 
 
 
-    return 0;
+    return;         //ret 1
 }
 

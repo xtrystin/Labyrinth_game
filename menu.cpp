@@ -1,7 +1,9 @@
 #include <iostream>
 #include <windows.h>
-using namespace std;
 
+#include "Menu.h"
+
+using namespace std;
 
 
 
@@ -38,7 +40,7 @@ void SelectLvl()
     cout << "*        1. Easy                                *" << endl;
     cout << "*        2. Medium                              *" << endl;
     cout << "*        3. Hard                                *" << endl;
-    cout << "*                                               *" << endl;
+    cout << "*        4. Menu                                *" << endl;
     cout << "*                                               *" << endl;
     cout << "*                                               *" << endl;
     cout << "*                                               *" << endl;
@@ -72,7 +74,7 @@ void Credits()
     cout << "*                                               *" << endl;
     cout << "*                                               *" << endl;
     cout << "*             GAME MADE BY                      *" << endl;
-    cout << "*               TRYSTIN                         *" << endl;
+    trystin();
     cout << "*                                               *" << endl;
     cout << "*          All rights reserved                  *" << endl;
     cout << "*                2020                           *" << endl;
@@ -81,51 +83,22 @@ void Credits()
     cout << "*************************************************" << endl;
 }
 
-void ExitGame()
+void trystin()
 {
-    cout << "Leaving..." << endl;
-    Sleep(1000);
-    exit(0);
+    cout << "___________                       __  .__        " << endl;
+    cout << "\\__    ___/______ ___.__. _______/  |_|__| ____  " << endl;
+    cout << "  |    |  \\_  __ <   |  |/  ___/\\   __\\  |/    \\ " << endl;
+    cout << "  |    |   |  | \\/\\___  |\\___ \\  |  | |  |   |  \\" << endl;
+    cout << "  |____|   |__|   / ____/____  > |__| |__|___|  /" << endl;
+    cout << "                  \\/         \\/               \\/ " << endl;
 }
 
-
-int main()
+void GameLogo()
 {
-    int choice;
-    menu();
-    cin >> choice;          //todo   if error input 
-    system("cls");
-
-
-
-    switch (choice)
-    {
-    case 1: 
-        //Play();
-        cout << "todo";
-        break;
-    case 2:
-        SelectLvl();
-        cin >> choice;
-        break;
-    case 3:
-        Settings();
-        cin >> choice;
-        break;
-    case 4:
-        Credits();
-        break;
-    case 5:
-        ExitGame();
-        break;
-    default:
-        cerr << "ERROR main > switch";
-        break;
-    }
-
-
-
-
-    return 0;
+    cout << ".____          ___.                 .__        __  .__        ________                       " << endl;
+    cout << "|    |   _____ \\_ |__ ___.__._______|__| _____/  |_|  |__    /  _____/_____    _____   ____  " << endl;
+    cout << "|    |   \\__  \\ | __ <   |  |\\_  __ \\  |/    \\   __\\  |  \\  /   \\  ___\\__  \\  /     \\_/ __ \\ " << endl;
+    cout << "|    |___ / __ \\| \\_\\ \\___  | |  | \\/  |   |  \\  | |   Y  \\ \\    \\_\\  \\/ __ \\|  Y Y  \\  ___/ " << endl;
+    cout << "|_______ (____  /___  / ____| |__|  |__|___|  /__| |___|  /  \\______  (____  /__|_|  /\\___  >" << endl;
+    cout << "        \\/    \\/    \\/\\/                    \\/          \\/          \\/     \\/      \\/     \\/ " << endl;
 }
-
