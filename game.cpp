@@ -340,6 +340,8 @@ void Tmovement::retMenu()
 
 void Play(int choice)
 {
+
+    gotoMenu = false;
     /*
     if (argc == 2)
     {
